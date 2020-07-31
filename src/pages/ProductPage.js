@@ -6,16 +6,13 @@ export const ProductPage = (props) => {
   const { getProduct } = useContext(StoreContext);
   const { slug } = props.match.params;
   const product = getProduct(slug);
-  console.log(product.id);
+  console.log(product);
   //console.log(slug);
-  if (product !== null) {
-    const { title}  = product;
+  if (!(Object.getOwnPropertyNames(product).length === 0)) {
+    const { title } = product;
 
     return <div>Hello from product page slug {title}</div>;
   } else {
-      return (
-          <PageNotFound/>
-      )
+    return <PageNotFound />;
   }
 };
-
