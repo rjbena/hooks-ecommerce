@@ -1,41 +1,37 @@
 import React, { createContext, useState, useEffect } from "react";
-import {storeProducts, detailProduct} from './data'
-import Client from "./config/Contentful";
+import { storeProducts, detailProduct } from "./data";
+//import Client from "./config/Contentful";
 export const StoreContext = createContext();
 
 const StoreContextProvider = (props) => {
   const [store, setStore] = useState({
-    products:[],
+    products: [],
     detailProduct,
     cart: [],
     cartSubTotal: 0,
-    cartTax:0,
+    cartTax: 0,
     cartTotal: 0,
     company: "",
     maxPrice: 0,
     minPrice: 0,
   });
 
-  const setProducts =() => {
+  const setProducts = () => {
     let tempProducts = [];
-    storeProducts.forEach((item) =>{
-      const singleItem = {...item};
-      tempProducts= [...tempProducts, singleItem]
+    storeProducts.forEach((item) => {
+      const singleItem = { ...item };
+      tempProducts = [...tempProducts, singleItem];
     });
     //console.log(tempProducts);
     setStore({
       ...store,
-      products: tempProducts
-    }
-
-    );
-
-  }
+      products: tempProducts,
+    });
+  };
 
   useEffect(() => {
     setProducts();
-
-  }, [])
+  }, []);
   // const getData = async () => {
   //   try {
   //     let response = await Client.getEntries({
@@ -60,18 +56,28 @@ const StoreContextProvider = (props) => {
   //   return tempItems;
   // };
 
+  const getSlug = (title) => {
+    let tempProducts = store.products;
+    let product = tempProducts.find((p) => p.title === title);
+    console.log(product);
+    if (product !== undefined) {
+      console.log(product.slug);
+      return product.slug;
+    }else {
+      return "404"
+    }
 
+  };
 
   const getProduct = (slug) => {
-
     let tempProducts = store.products;
 
-    let product = tempProducts.find(p => p.slug === slug);
-    return {...product};
+    let product = tempProducts.find((p) => p.slug === slug);
+    return { ...product };
   };
 
   return (
-    <StoreContext.Provider value={{ store, getProduct }}>
+    <StoreContext.Provider value={{ store,products: store.products, getProduct, getSlug }}>
       {props.children}
     </StoreContext.Provider>
   );
